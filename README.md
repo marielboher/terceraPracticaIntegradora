@@ -1,0 +1,1 @@
+Hola nico! aca te dejo mi entrega, te explico para carts, se genera con el pimer producto que agregas al carrito, fijate de tener el local storage limpio, y la bdd tamb, al finalizar la comprase queda el carrito con lo que no se pudo comprar
