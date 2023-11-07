@@ -17,6 +17,7 @@ class ProductManager {
           stock: product.stock,
           category: product.category,
           thumbnails: product.thumbnails,
+          owner: product.owner,
         };
         const createdProduct = await productModel.create(producto);
         console.log("Product added!");

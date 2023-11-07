@@ -73,6 +73,8 @@ class ProductController {
       thumbnails,
     } = req.body;
 
+    const owner = req.user._id; 
+    
     if (!title) {
       res.status(400).send({
         status: "error",
@@ -140,6 +142,7 @@ class ProductController {
         stock,
         category,
         thumbnails,
+        owner,
       });
 
       if (wasAdded && wasAdded._id) {
@@ -158,6 +161,7 @@ class ProductController {
           stock,
           category,
           thumbnails,
+          owner,
         });
         return;
       } else {
@@ -237,11 +241,32 @@ class ProductController {
 
       const product = await this.productService.getProductById(pid);
 
+      console.log("user",req.user)
+      console.log("product owner", product.owner);
+
+
       if (!product) {
         req.logger.error("Producto no encontrado");
         res.status(404).send({
           status: "error",
           message: "Producto no encontrado",
+        });
+        return;
+      }
+
+      if (
+        !req.user ||
+        (req.user.role !== "admin" &&
+          (!product.owner ||
+            req.user._id.toString() !== product.owner.toString()))
+      ) {
+        req.logger.error(
+          "Operación no permitida: el usuario no tiene derechos para eliminar este producto o el producto no tiene propietario definido."
+        );
+        res.status(403).send({
+          status: "error",
+          message:
+            "No tiene permiso para eliminar este producto o producto no tiene propietario.",
         });
         return;
       }
@@ -254,21 +279,19 @@ class ProductController {
           status: "ok",
           message: "Producto eliminado exitosamente",
         });
-        socketServer.emit("product_deleted", { _id: pid });
       } else {
-        req.logger.error("Error eliminando el producto");
         res.status(500).send({
           status: "error",
-          message: "Error eliminando el producto",
+          message: "Error! No se pudo eliminar el Producto!",
         });
       }
     } catch (error) {
-      console.error(error);
-      res.status(500).send({
-        status: "error",
-        message: "Error interno del servidor",
-      });
+      req.logger.error("Error en deleteProduct:", error);
+      res
+        .status(500)
+        .send({ status: "error", message: "Internal server error." });
     }
   }
 }
+
 export default new ProductController();

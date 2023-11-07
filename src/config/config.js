@@ -27,6 +27,8 @@ export const ENV_CONFIG = {
   clientSecretGithub: process.env.CLIENT_SECRET_GITHUB,
   adminEmail: process.env.ADMIN_EMAIL,
   adminPassword: process.env.ADMIN_PASSWORD,
+  premiumEmail: process.env.PREMIUM_EMAIL,
+  premiumPassword: process.env.PREMIUM_PASSWORD,
   persistence: process.env.PERSISTENCE,
   emailUser: process.env.EMAIL_USER,
   emailPassword: process.env.EMAIL_PASS,
